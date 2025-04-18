@@ -1,25 +1,40 @@
-import logo from './logo.svg';
+import React, { Component } from 'react';
+
+import Header from './components/Header';
+import MovieList from './components/MovieList';
 import './App.css';
+import { searchMovies } from './api/api';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      movies: [],
+      query: 'return',
+    };
+
+    this.fetchMovies = this.fetchMovies.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchMovies(this.state.query);
+  }
+
+  async fetchMovies(query) {
+    try {
+      const movies = await searchMovies(query);
+      this.setState({ movies });
+    } catch (error) {
+      console.log('Ошибка при получении фильмов', error);
+    }
+  }
+
+  render() {
+    return (
+      <div className="app-container">
+        <Header />
+        <MovieList movies={this.state.movies} />
+      </div>
+    );
+  }
 }
-
-export default App;

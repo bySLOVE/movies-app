@@ -1,0 +1,30 @@
+.app-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 25px;
+    gap: 20px;
+  }
+  
+  .header-tabs {
+    display: flex;
+    gap: 24px;
+  }
+  
+  .app-header .ant-btn {
+    font-weight: 500;
+    font-size: 16px;
+    color:rgba(0, 0, 0, 0.65);
+  }
+  
+  .active-tab {
+    font-weight: 600;
+    color: #1890ff;
+    border-bottom: 2px solid #1890ff;
+    border-radius: 0;
+  }
+  
+  .header-search {
+    width: 100%;
+   
+  }
