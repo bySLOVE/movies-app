@@ -12,29 +12,24 @@ const formatDate = (dateString) => {
 };
 
 export const searchMovies = async (query, page = 1) => {
-  try {
-    const response = await fetch(
-      `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}`
-    );
+  const response = await fetch(
+    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&page=${page}`
+  );
 
-    if (!response.ok) {
-      throw new Error(`Ошибка HTTP: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('Ответ от API:', data);
-    const movies = data.results.map((movie) => ({
-      title: movie.title,
-      poster: movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : null,
-      overview: movie.overview,
-      releaseDate: formatDate(movie.release_date),
-      genres: ['Action', 'Drama'],
-      rating: Number(movie.vote_average.toFixed(1)),
-    }));
-
-    return movies;
-  } catch (err) {
-    console.error('Ошибка запроса к API:', err);
-    return [];
+  if (!response.ok) {
+    throw new Error(`Ошибка HTTP: ${response.status}`);
   }
+
+  const data = await response.json();
+  console.log('Ответ от API:', data);
+  const movies = data.results.map((movie) => ({
+    title: movie.title,
+    poster: movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : null,
+    overview: movie.overview,
+    releaseDate: formatDate(movie.release_date),
+    genres: ['Action', 'Drama'],
+    rating: Number(movie.vote_average.toFixed(1)),
+  }));
+
+  return movies;
 };
