@@ -17,6 +17,7 @@ export default class MovieList extends Component {
             releaseDate={movie.releaseDate}
             genres={movie.genres || []}
             rating={movie.rating}
+            movies={movie.movies}
           />
         ))}
       </div>

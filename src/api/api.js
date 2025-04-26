@@ -21,7 +21,6 @@ export const searchMovies = async (query, page = 1) => {
   }
 
   const data = await response.json();
-  console.log('Ответ от API:', data);
   const movies = data.results.map((movie) => ({
     title: movie.title,
     poster: movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : null,
@@ -31,5 +30,8 @@ export const searchMovies = async (query, page = 1) => {
     rating: Number(movie.vote_average.toFixed(1)),
   }));
 
-  return movies;
+  return {
+    movies,
+    totalResults: data.total_results,
+  };
 };
