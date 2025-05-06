@@ -5,19 +5,23 @@ import './MovieList.css';
 
 export default class MovieList extends Component {
   render() {
-    const { movies } = this.props;
+    const { movies, guestSessionId, onRated } = this.props;
     return (
       <div className="movie-list">
-        {movies.map((movie, id) => (
+        {movies.map((movie) => (
           <MovieCard
-            key={id}
+            key={movie.id}
+            movieId={movie.id}
             title={movie.title}
             poster={movie.poster}
             overview={movie.overview}
             releaseDate={movie.releaseDate}
-            genres={movie.genres || []}
+            genre_ids={movie.genre_ids}
+            vote_average={movie.vote_average}
             rating={movie.rating}
-            movies={movie.movies}
+            guestSessionId={guestSessionId}
+            onRated={onRated}
+            userRating={movie.rating}
           />
         ))}
       </div>
