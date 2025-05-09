@@ -19,7 +19,7 @@ export default class Header extends Component {
   }
 
   render() {
-    const { currentTab } = this.props;
+    const { currentTab, query } = this.props;
 
     return (
       <div className="app-header">
@@ -41,7 +41,7 @@ export default class Header extends Component {
         </div>
         {currentTab === 'search' && (
           <div className="header-search">
-            <Input placeholder="Type to search..." onChange={this.handleChange} />
+            <Input placeholder="Type to search..." onChange={this.handleChange} value={query} />
           </div>
         )}
       </div>

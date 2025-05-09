@@ -54,7 +54,13 @@ export default class App extends Component {
   }
 
   handleSearchChange(query) {
-    this.setState({ query, currentPage: 1, loading: true }, () => {
+    this.setState({ query, currentPage: 1 });
+    if (query.trim() === '') {
+      this.debouncedSearch.cancel();
+      this.setState({ movies: [], totalResults: 0, loading: false });
+      return;
+    }
+    this.setState({ loading: true }, () => {
       this.debouncedSearch(query, 1);
     });
   }
@@ -67,12 +73,15 @@ export default class App extends Component {
   }
 
   handleTabChange(tab) {
-    this.setState({ currentTab: tab });
-    if (tab === 'search') {
-      this.fetchMovies(this.state.query, this.state.currentPage);
-    } else if (tab === 'rated') {
-      this.fetchRatedMovies();
-    }
+    const { currentTab, query, currentPage } = this.state;
+    if (tab === currentTab) return;
+    this.setState({ currentTab: tab }, () => {
+      if (tab === 'search' && query.trim() !== '') {
+        this.fetchMovies(query, currentPage);
+      } else if (tab === 'rated') {
+        this.fetchRatedMovies(); // <-- всегда обновляем
+      }
+    });
   }
 
   handleOnlineStatus() {
@@ -100,7 +109,6 @@ export default class App extends Component {
 
     try {
       const ratedMovies = await fetchRatedMovies(guestSessionId);
-      console.log('Rated Movies:', ratedMovies);
       this.setState({ movies: ratedMovies, loading: false });
     } catch (error) {
       this.setState({
@@ -121,6 +129,7 @@ export default class App extends Component {
 
   updateRatedMovieRating(movieId, rating) {
     this.setState((prevState) => {
+      // Обновляем только рейтинг нужного фильма
       const updatedMovies = prevState.movies.map((movie) => (movie.id === movieId ? { ...movie, rating } : movie));
       return { movies: updatedMovies };
     });
@@ -129,11 +138,15 @@ export default class App extends Component {
   render() {
     const { loading, movies, error, isOnline, currentPage, totalResults, genres, guestSessionId, currentTab, query } =
       this.state;
-
     return (
       <GenresContext.Provider value={genres}>
         <div className="app-container">
-          <Header onSearchChange={this.handleSearchChange} onTabChange={this.handleTabChange} currentTab={currentTab} />
+          <Header
+            onSearchChange={this.handleSearchChange}
+            onTabChange={this.handleTabChange}
+            currentTab={currentTab}
+            query={query}
+          />
           {!isOnline && (
             <div style={{ margin: '20px auto', maxWidth: '600px' }}>
               <Alert
@@ -187,7 +200,7 @@ export default class App extends Component {
                   {movies.length === 0 ? (
                     <EmptyMessage />
                   ) : (
-                    <MovieList movies={movies} guestSessionId={guestSessionId} />
+                    <MovieList movies={movies} guestSessionId={guestSessionId} onRated={this.updateRatedMovieRating} />
                   )}
                 </>
               )}

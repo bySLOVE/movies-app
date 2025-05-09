@@ -30,11 +30,11 @@ export default class MovieCard extends Component {
     return 'rating-high';
   }
 
-  async handleRate(value) {
+  handleRate(value) {
     const { guestSessionId, movieId, onRated } = this.props;
     console.log('Отправляем данные:', { movieId, guestSessionId, value });
     try {
-      await rateMovie(movieId, guestSessionId, value);
+      rateMovie(movieId, guestSessionId, value);
       this.setState({ userRating: value });
       if (onRated) {
         onRated(movieId, value);

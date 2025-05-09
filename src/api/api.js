@@ -13,7 +13,6 @@ const formatDate = (dateString) => {
 
 // Обработка ошибок
 const handleError = (response) => {
-  console.error('API Error:', response.statusText);
   throw new Error(`Ошибка: ${response.statusText} (${response.status})`);
 };
 
